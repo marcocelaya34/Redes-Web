@@ -18,6 +18,7 @@ export class ConfigService {
   };
 
   getSmartphone(cmd: string, item: ICrendential) {
+    console.log('Se va a enviar: ' + cmd);
     return this.http.post('http://localhost:3000', {
       password: item.password,
       user: item.user,

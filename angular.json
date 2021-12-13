@@ -103,6 +103,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "redes-proyecto-web:build:production",
+            "firebaseProject": "redes-334503",
+            "firebaseHostingSite": "redes-334503"
+          }
         }
       }
     }

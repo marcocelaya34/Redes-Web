@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { collection, collectionData, Firestore } from '@angular/fire/firestore';
-
-import { Observable } from 'rxjs';
-import { ConfigService } from '../config.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +7,7 @@ import { ConfigService } from '../config.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  items: Observable<any>;
-
-  constructor(private api: ConfigService, firestore: Firestore) {
-    const collectionDB = collection(firestore, 'credenciales');
-    this.items = collectionData(collectionDB);
-  }
-
-  quantity = [];
+  constructor(firestore: AngularFirestore) {}
 
   ngOnInit(): void {}
 }

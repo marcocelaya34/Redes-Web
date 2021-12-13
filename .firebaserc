@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "redes-334503": {
+      "hosting": {
+        "redes-proyecto-web": [
+          "redes-334503"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "redes-334503"
+  }
+}

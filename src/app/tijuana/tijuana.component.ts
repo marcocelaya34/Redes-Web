@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { collection, collectionData, Firestore } from '@angular/fire/firestore';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 
 import { ConfigService } from '../config.service';
 
@@ -11,81 +15,88 @@ import { ConfigService } from '../config.service';
   styleUrls: ['./tijuana.component.scss'],
 })
 export class TijuanaComponent implements OnInit {
-  items!: Observable<any>;
+  private itemDoc: AngularFirestoreDocument<any>;
+  item: Observable<any>;
   name = new FormControl('');
-  collectionDB;
 
   dir: string[] = [];
   path: string = '';
 
-  constructor(private api: ConfigService, firestore: Firestore) {
-    this.collectionDB = collection(firestore, 'credenciales');
+  constructor(private api: ConfigService, afs: AngularFirestore) {
+    this.itemDoc = afs.doc<any>('credenciales/cdmx');
+
+    this.item = this.itemDoc.valueChanges();
   }
 
-  quantity = [];
+  files = [];
 
   ngOnInit(): void {
-    this.onSave('ls');
+    this.onSave();
   }
 
-  async onSave(newCMD: string) {
-    this.items = await collectionData(this.collectionDB);
-
-    this.items.subscribe((data) => {
-      var cmd: string = newCMD;
-      let char = String.fromCharCode(10);
-      /*  console.log(char);
-      console.log('valor remplazado' + cmd.replace(/\\n/g, '\n')); */
-
-      let remplaze = cmd.replace(/\\n/g, '\n');
-      /*   console.log(remplaze); */
-      this.api.getSmartphone(remplaze, data[0]).subscribe((data) => {
-        const ddd = JSON.parse(JSON.stringify(data));
-
-        this.quantity = ddd.message.split('\n');
-        console.log(this.quantity);
+  async onSave() {
+    console.log('INICIANDO');
+    this.item.subscribe((data) => {
+      this.api.getSmartphone('ls', data).subscribe((data) => {
+        const responseSSH = JSON.parse(JSON.stringify(data));
+        this.files = responseSSH.message.split('\n');
       });
     });
   }
 
   async onSavePath(newCMD: string) {
-    this.items = await collectionData(this.collectionDB);
-    this.path = this.path + 'cd ' + newCMD + ' \n';
-    this.dir.push('cd ' + newCMD);
-    console.log(this.dir);
+    console.log('ABRIENDO CARPETA');
+    if (this.getExtension(newCMD) == '0') {
+      this.path = this.path + 'cd ' + newCMD + ' \n';
+      this.dir.push('cd ' + newCMD);
 
-    this.items.subscribe((data) => {
-      var cmd: string = this.path;
+      this.item.subscribe((data) => {
+        var cmd: string = this.path;
+        let remplaze = cmd.replace(/\\n/g, '\n');
 
-      let remplaze = cmd.replace(/\\n/g, '\n');
-
-      this.api.getSmartphone(remplaze + ' ls', data[0]).subscribe((data) => {
-        const ddd = JSON.parse(JSON.stringify(data));
-        this.quantity = ddd.message.split('\n');
-        console.log(this.quantity);
+        this.api.getSmartphone(remplaze + ' ls', data).subscribe((data) => {
+          const responseSSH = JSON.parse(JSON.stringify(data));
+          console.log('Repsuesta ssh: ' + responseSSH.message);
+          this.files = responseSSH.message.split('\n');
+        });
       });
-    });
+    }
   }
 
   async return() {
-    this.items = await collectionData(this.collectionDB);
     let url = '';
-
     this.dir.pop();
 
     for (let index = 0; index < this.dir.length; index++) {
       url = url + this.dir[index] + '\n';
     }
-
-    url = url + ' ls';
-
-    console.log(url);
+    console.log('RETURN');
     this.path = url;
-    this.items.subscribe((data) => {
-      this.api.getSmartphone(url, data[0]).subscribe((data) => {
-        const ddd = JSON.parse(JSON.stringify(data));
-        this.quantity = ddd.message.split('\n');
-        console.log(this.quantity);
+    this.item.subscribe((data) => {
+      this.api.getSmartphone(url + ' ls', data).subscribe((data) => {
+        const responseSSH = JSON.parse(JSON.stringify(data));
+        this.files = responseSSH.message.split('\n');
+      });
+    });
+  }
+
+  delete(item: string) {
+    console.log('BORRANDO');
+    var newItem = item.toString().replace(/\s/g, ' ');
+    var actualRute = this.path + '\n' + 'ls';
+    this.path = this.path + 'rm -rf ' + '"' + newItem + '"' + '\n';
+
+    var urlDelete = this.path;
+    this.item.subscribe((data) => {
+      var cmd: string = urlDelete;
+      let remplaze = actualRute.replace(/\\n/g, '\n').replace(/"/g, '\\"');
+
+      /* Borramos la carpetw */
+      console.log('CMB: ' + cmd + remplaze);
+      this.api.getSmartphone(cmd + remplaze, data).subscribe((data) => {
+        const responseSSH = JSON.parse(JSON.stringify(data));
+        console.log('Repsuesta ssh: ' + responseSSH.message);
+        this.files = responseSSH.message.split('\n');
       });
     });
   }

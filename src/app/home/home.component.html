@@ -1,40 +1,53 @@
-
-
-<div class="uk-grid-small uk-child-width-expand@s uk-text-center" style="margin-top: 100px;
-margin-left: 100px;
-margin-right: 100px;" uk-grid>
+<div
+  class="uk-grid-small uk-child-width-expand@s uk-text-center"
+  style="margin-top: 100px; margin-left: 100px; margin-right: 100px"
+  uk-grid
+>
+  <div>
     <div>
-        <div >  <a routerLink="/Tijuana"><img src="./../../assets/images/TijuanaButton.png" alt="" style="margin: 37px;"></a></div>
+      <a routerLink="/Tijuana"
+        ><img
+          src="./../../assets/images/TijuanaButton.png"
+          alt=""
+          style="margin: 37px"
+      /></a>
     </div>
+  </div>
+  <div>
     <div>
-        <div > <a routerLink="/Merida"><img src="./../../assets/images/MeridaButton.png" alt="" style="margin: 37px;"></a></div>
+      <a routerLink="/Merida"
+        ><img
+          src="./../../assets/images/MeridaButton.png"
+          alt=""
+          style="margin: 37px"
+      /></a>
     </div>
-   
+  </div>
 </div>
 
-<div class="uk-grid-medium uk-child-width-expand@s uk-text-center" style="margin-top: 43px;
-margin-left: 87px;
-margin-right: 100px;" uk-grid>
+<div
+  class="uk-grid-medium uk-child-width-expand@s uk-text-center"
+  style="margin-top: 43px; margin-left: 87px; margin-right: 100px"
+  uk-grid
+>
+  <div>
     <div>
-        <div ><a routerLink="/Cdmx"> <img src="./../../assets/images/CdmxButton.png" alt="" style="margin: 37px;"></a></div>
+      <a routerLink="/Cdmx">
+        <img
+          src="./../../assets/images/CdmxButton.png"
+          alt=""
+          style="margin: 37px"
+      /></a>
     </div>
+  </div>
+  <div>
     <div>
-        <div > <a routerLink="/Gdl"><img src="./../../assets/images/GdlButton.png" alt="" style="margin: 37px;"></a></div>
+      <a routerLink="/Gdl"
+        ><img
+          src="./../../assets/images/GdlButton.png"
+          alt=""
+          style="margin: 37px"
+      /></a>
     </div>
-    
+  </div>
 </div>
-
-
-<ul>
-    <li class="text" *ngFor="let item of items | async">
-      {{item.user}}
-      {{item.password}}
-      {{item.address}}
-    </li>
-  </ul>
-
-<p *ngFor="let item of quantity">
-
-    {{item}}
-</p>
-
