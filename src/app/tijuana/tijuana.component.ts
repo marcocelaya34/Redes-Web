@@ -23,7 +23,7 @@ export class TijuanaComponent implements OnInit {
   path: string = '';
 
   constructor(private api: ConfigService, afs: AngularFirestore) {
-    this.itemDoc = afs.doc<any>('credenciales/cdmx');
+    this.itemDoc = afs.doc<any>('credenciales/tijuana');
 
     this.item = this.itemDoc.valueChanges();
   }
