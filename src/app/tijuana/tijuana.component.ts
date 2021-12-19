@@ -37,6 +37,7 @@ export class TijuanaComponent implements OnInit {
   async onSave() {
     console.log('INICIANDO');
     this.item.subscribe((data) => {
+      console.log(data);
       this.api.getSmartphone('ls', data).subscribe((data) => {
         const responseSSH = JSON.parse(JSON.stringify(data));
         this.files = responseSSH.message.split('\n');
