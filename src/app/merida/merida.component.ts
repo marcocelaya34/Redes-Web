@@ -23,7 +23,7 @@ export class MeridaComponent implements OnInit {
   path: string = '';
 
   constructor(private api: ConfigService, afs: AngularFirestore) {
-    this.itemDoc = afs.doc<any>('credenciales/merida');
+    this.itemDoc = afs.doc<any>('credenciales/datacenter');
 
     this.item = this.itemDoc.valueChanges();
   }
