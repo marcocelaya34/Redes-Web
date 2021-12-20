@@ -17,14 +17,16 @@ import { ConfigService } from '../config.service';
 export class MeridaComponent implements OnInit {
   private itemDoc: AngularFirestoreDocument<any>;
   item: Observable<any>;
-  name = new FormControl('');
+  nameFile = new FormControl('');
+  nameFolder = new FormControl('');
+  nameEdit = new FormControl('');
+  oldnameEdit: string = '';
 
   dir: string[] = [];
   path: string = '';
 
   constructor(private api: ConfigService, afs: AngularFirestore) {
-    this.itemDoc = afs.doc<any>('credenciales/datacenter');
-
+    this.itemDoc = afs.doc<any>('credenciales/local');
     this.item = this.itemDoc.valueChanges();
   }
 
@@ -39,6 +41,7 @@ export class MeridaComponent implements OnInit {
     this.item.subscribe((data) => {
       console.log(data);
       this.api.getSmartphone('ls', data).subscribe((data) => {
+        console.log(data);
         const responseSSH = JSON.parse(JSON.stringify(data));
         this.files = responseSSH.message.split('\n');
       });
@@ -81,10 +84,79 @@ export class MeridaComponent implements OnInit {
     });
   }
 
+  async createFile() {
+    let url = '';
+
+    for (let index = 0; index < this.dir.length; index++) {
+      url = url + this.dir[index] + '\n';
+    }
+    console.log('RETURN');
+    console.log(this.nameFile.value);
+    this.path = url;
+    this.item.subscribe((data) => {
+      this.api
+        .getSmartphone(url + `touch ${this.nameFile.value}` + '\n' + 'ls', data)
+        .subscribe((data) => {
+          this.nameFile.setValue('');
+          const responseSSH = JSON.parse(JSON.stringify(data));
+          this.files = responseSSH.message.split('\n');
+        });
+    });
+  }
+
+  async createFolder() {
+    let url = '';
+
+    for (let index = 0; index < this.dir.length; index++) {
+      url = url + this.dir[index] + '\n';
+    }
+    console.log('RETURN');
+    this.path = url;
+    this.item.subscribe((data) => {
+      this.api
+        .getSmartphone(
+          url + `mkdir ${this.nameFolder.value}` + '\n' + 'ls',
+          data
+        )
+        .subscribe((data) => {
+          this.nameFolder.setValue('');
+          const responseSSH = JSON.parse(JSON.stringify(data));
+          this.files = responseSSH.message.split('\n');
+        });
+    });
+  }
+
+  async saveName(oldName: string) {
+    this.oldnameEdit = oldName;
+  }
+
+  async edit() {
+    let url = '';
+
+    for (let index = 0; index < this.dir.length; index++) {
+      url = url + this.dir[index] + '\n';
+    }
+    console.log('RETURN');
+    this.path = url;
+    this.item.subscribe((data) => {
+      this.api
+        .getSmartphone(
+          url + `mv ${this.oldnameEdit}  ${this.nameEdit.value}` + '\n' + 'ls',
+          data
+        )
+        .subscribe((data) => {
+          this.nameEdit.setValue('');
+          this.oldnameEdit = '';
+          const responseSSH = JSON.parse(JSON.stringify(data));
+          this.files = responseSSH.message.split('\n');
+        });
+    });
+  }
+
   delete(item: string) {
     console.log('BORRANDO');
     var newItem = item.toString().replace(/\s/g, ' ');
-    var actualRute = this.path + '\n' + 'ls';
+    var actualRute = this.path + 'ls';
     this.path = this.path + 'rm -rf ' + '"' + newItem + '"' + '\n';
 
     var urlDelete = this.path;
@@ -95,6 +167,7 @@ export class MeridaComponent implements OnInit {
       /* Borramos la carpetw */
       console.log('CMB: ' + cmd + remplaze);
       this.api.getSmartphone(cmd + remplaze, data).subscribe((data) => {
+        this.path = actualRute.replace('ls', '');
         const responseSSH = JSON.parse(JSON.stringify(data));
         console.log('Repsuesta ssh: ' + responseSSH.message);
         this.files = responseSSH.message.split('\n');
