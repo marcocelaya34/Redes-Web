@@ -1,9 +1,31 @@
-<div (click)="return()" class="uk-width-1-1" style="margin-top: 120px">
-  <img
-    src="./../../assets/images/left-arrow.png"
-    alt=""
-    style="width: 2%; margin-left: 4%; margin-bottom: 3%"
-  />
+<div class="uk-flex" style="margin-bottom: 30px">
+  <div (click)="return()" class="uk-width-1-1" style="margin-top: 120px">
+    <img
+      src="./../../assets/images/left-arrow.png"
+      alt=""
+      style="width: 2%; margin-left: 4%; margin-bottom: 3%"
+    />
+  </div>
+  <div
+    class="uk-width-1-6"
+    style="margin-top: 120px"
+    uk-toggle="target: #modalFile"
+    type="button"
+  >
+    <img src="./../../assets/images/add.png" alt="" style="width: 51px" />
+  </div>
+  <div
+    class="uk-width-1-6"
+    style="margin-top: 120px"
+    uk-toggle="target: #modalFolder"
+    type="button"
+  >
+    <img
+      src="./../../assets/images/add-folder.png"
+      alt=""
+      style="width: 45px"
+    />
+  </div>
 </div>
 
 <div
@@ -14,6 +36,13 @@
   uk-grid
 >
   <div *ngFor="let item of files">
+    <img
+      *ngIf="files.length == 1"
+      src="./../../assets/images/carpetaVacia.png"
+      alt=""
+      style="margin-left: 100%"
+    />
+
     <div
       *ngIf="item != ''"
       class="uk-card uk-card-default uk-card-body"
@@ -31,6 +60,21 @@
           margin: 10px;
           z-index: 9999;
         "
+      />
+      <img
+        (click)="saveName(item)"
+        src="./../../assets/images/edit.png"
+        alt=""
+        style="
+          width: 10%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          margin: 10px;
+          z-index: 9999;
+        "
+        uk-toggle="target: #modalEdit"
+        type="button"
       />
       <div (click)="onSavePath(item)" style="z-index: 1">
         <img
@@ -50,5 +94,92 @@
         </p>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- This is the modal File -->
+<div id="modalFile" uk-modal style="z-index: 999999">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Crea un Archivo</h2>
+    <label for="name">Ingresa el nombre del nuevo Archivo: </label>
+
+    <input
+      type="text"
+      id="nameFile"
+      name="nameFile"
+      [formControl]="nameFile"
+      required
+    />
+
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">
+        Cancel
+      </button>
+      <button
+        class="uk-button uk-button-primary uk-modal-close"
+        type="button"
+        (click)="createFile()"
+      >
+        Save
+      </button>
+    </p>
+  </div>
+</div>
+
+<!-- This is the modal Folder -->
+<div id="modalFolder" uk-modal style="z-index: 999999">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Crea un Folder</h2>
+    <label for="name">Ingresa el nombre del nuevo Folder: </label>
+
+    <input
+      type="text"
+      id="nameFolder"
+      name="nameFolder"
+      [formControl]="nameFolder"
+      required
+    />
+
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">
+        Cancel
+      </button>
+      <button
+        class="uk-button uk-button-primary uk-modal-close"
+        type="button"
+        (click)="createFolder()"
+      >
+        Save
+      </button>
+    </p>
+  </div>
+</div>
+
+<!-- This is the modal Edit -->
+<div id="modalEdit" uk-modal style="z-index: 999999">
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Editar Nombre</h2>
+    <label for="name">Ingresa el nuevo nombre: </label>
+
+    <input
+      type="text"
+      id="nameEdit"
+      name="nameEdit"
+      [formControl]="nameEdit"
+      required
+    />
+
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">
+        Cancel
+      </button>
+      <button
+        class="uk-button uk-button-primary uk-modal-close"
+        type="button"
+        (click)="edit()"
+      >
+        Save
+      </button>
+    </p>
   </div>
 </div>

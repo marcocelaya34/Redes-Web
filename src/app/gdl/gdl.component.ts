@@ -26,7 +26,7 @@ export class GdlComponent implements OnInit {
   path: string = '';
 
   constructor(private api: ConfigService, afs: AngularFirestore) {
-    this.itemDoc = afs.doc<any>('credenciales/local');
+    this.itemDoc = afs.doc<any>('credenciales/gdl');
     this.item = this.itemDoc.valueChanges();
   }
 

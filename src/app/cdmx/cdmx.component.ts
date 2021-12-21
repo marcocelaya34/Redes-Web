@@ -26,7 +26,7 @@ export class CdmxComponent implements OnInit {
   path: string = '';
 
   constructor(private api: ConfigService, afs: AngularFirestore) {
-    this.itemDoc = afs.doc<any>('credenciales/local');
+    this.itemDoc = afs.doc<any>('credenciales/cdmx');
     this.item = this.itemDoc.valueChanges();
   }
 
